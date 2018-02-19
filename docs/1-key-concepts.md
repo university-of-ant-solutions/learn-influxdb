@@ -59,6 +59,10 @@ InfluxDB fields (#_foodships) are like unindexed columns in an SQL database.
 
 InfluxDB points (for example, 2015-04-16T12:00:00Z 5) are similar to SQL rows.
 
+## A note on why influxdb is not crud
+
+InfluxDB is a database that has been optimized for time series data. This data commonly comes from sources like distributed sensor groups, click data from large websites, or lists of financial transactions. One thing this data has in common is that it is more useful in the aggregate. One reading saying that your computer’s CPU is at 12% utilization at 12:38:35 UTC on a Tuesday is hard to draw conclusions from. It becomes more useful when combined with the rest of the series and visualized. This is where trends over time begin to show, and actionable insight can be drawn from the data. In addition, time series data is generally written once and rarely updated. The result is that InfluxDB is not a full CRUD database but more like a CR-ud, prioritizing the performance of creating and reading data over update and destroy, and preventing some update and destroy behaviors to make create and read more performant: * To update a point, insert one with the same measurement, tag set, and timestamp. * You can drop or delete a series, but not individual points based on field values. As a workaround, you can search for the field value, retrieve the time, then DELETE based on the time field. * You can’t update or rename tags yet - see GitHub issue #4157 for more information. To modify the tag of a series of points, find the points with the offending tag value, change the value to the desired one, write the points back, then drop the series with the old tag value. * You can’t delete tags by tag key (as opposed to value) - see GitHub issue #8604.
+
 ## Resources
 
 - [concepts](https://docs.influxdata.com/influxdb/v1.4/concepts/key_concepts/)
