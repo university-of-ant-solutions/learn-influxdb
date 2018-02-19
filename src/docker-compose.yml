@@ -1,0 +1,18 @@
+version: "3.3"
+
+services:
+
+  influxdb:
+    container_name: influxdb
+    environment:
+      - INFLUXDB_DATA_QUERY_LOG_ENABLED=false
+      - INFLUXDB_HTTP_AUTH_ENABLED=false
+      # - INFLUXDB_ADMIN_USER=admin
+      # - INFLUXDB_ADMIN_PASSWORD=admin
+      - INFLUXDB_HTTP_LOG_ENABLED=false
+    image: influxdb:1.4.3
+    restart: always
+    volumes:
+      - ./data:/var/lib/influxdb
+      - ./practices:/practices
+
